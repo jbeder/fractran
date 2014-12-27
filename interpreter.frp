@@ -1,0 +1,317 @@
+# p0 p1 -> 0 p0+p1
+Move: !simple |2
+  -1  1 |
+
+# p0 p1 -> 0 p0+p1
+BigMove: !simple |2
+  -64 64 |
+  -32 32 |
+  -16 16 |
+  -8 8 |
+  -4 4 |
+  -2 2 |
+  -1 1 |
+
+# p0 p1 -> 0 p1-p0 or p0-p1 0, depending on which is bigger
+SubtractFrom: !simple |2
+  -1 -1 |
+
+# p0 p1 p2 -> 0 p0+p1 p0+p2
+Duplicate: !simple |2
+  -1  1  1 |
+
+# p0 0 -> 0 1
+# requires p0 to be nonzero
+Set: !simple |2
+   1 -2 |  0
+  -1  1 |  1
+   0  0 | -1
+
+# p0 -> 0/1 depending on whether p0 == 0 or not
+True: !simple |2
+  -2 |  1
+   1 | -1
+
+# p0 -> p0+1
+One: !simple |2
+  1 |  | -1
+
+# p0 -> p0 + 2
+Two: !seq |2
+  One(p0)
+  One(p0)
+
+# p0 -> p0 + 3
+Three: !seq |2
+  One(p0)
+  Two(p0)
+
+# p0 -> !p0
+# requires p0 to be zero or one
+Not: !simple |2
+  -1 |  | -1
+   1 |  | -1
+
+# p0 p1 p2 -> 0 0 p0+p1+p2
+Add: !simple |2
+  -1  0  1 |
+   0 -1  1 |
+
+# p0 -> 0
+Zero: !simple |2
+  -1 |
+
+# p0 p1 -> p0 p0+p1
+Copy: !seq |2
+  Duplicate(p0, p1, temp0)
+  Move(temp0, p0)
+
+# p0 p1 -> p0 p0
+Replace: !seq |2
+  Zero(p1)
+  Copy(p0, p1)
+
+# p0 p1 -> 0 p0
+MoveReplace: !seq |2
+  Zero(p1)
+  Move(p0, p1)
+
+# p0 p1 p2 -> p0 p1 p0+p1+p2
+FixedAdd: !seq |2
+  Copy(p0, temp0)
+  Copy(p1, temp1)
+  Add(temp0, temp1, p2)
+
+# p0 p1 p2 -> 0 0 p2 + p0*p1
+Mult: !simple |2
+   0 -1  1  |  1 -1  1
+   0  0  0  |  0  1 -1
+   0  0  0  |  0 -1
+   0  1  0  | -1
+  -1  0  0  |  0  1
+   0 -1  0  |
+
+# p0 p1 p2 -> p0 p1 p2 + p0*p1
+FixMult: !seq |2
+  Copy(p0, temp0)
+  Copy(p1, temp1)
+  Mult(temp0, temp1, p2)
+
+# p0 p1 0 0 -> 0 0 p0/p1 p0%p1
+Mod: !simple |2
+  -1 -1  0  1 |  1       | -1
+   0  0  0  0 | -1       |  1
+   0 -1  0  0 |  0       | -1
+   0  0  1  0 |  0  1    | -1
+   0  1  0 -1 |  0 -1  1 |  0
+   0  0  0  0 |  0  1 -1 |  0
+   0  0  0  0 |  0 -1    |  1
+   0 -1  0  0 |          |  0
+
+# p0 p1 0 0 -> p0 p1 p0/p1 p0%p1
+FixMod: !seq |2
+  Copy(p0, temp0);
+  Copy(p1, temp1);
+  Mod(temp0, temp1, p2, p3)
+
+# p0 0 -> p0 0/1 depending on whether p0 is prime
+IsPrime: !seq |2
+  One(temp0)
+  Two(temp1)
+  while(temp0, p0, temp1, temp0, IsNotMultipleOfAndIncrement)
+  IsEqual(p0, temp1, p1)
+  Zero(temp1)
+
+# p0 p1 0 -> p0 p1 1 if p0 is greater than p1, 0 otherwise
+IsGreater: !seq |2
+  Copy(p0, temp0)
+  Copy(p1, temp1)
+  SubtractFrom(temp0, temp1)
+  Set(temp0, p2)
+
+# p0 p1 0 -> p0 p1 1 if p0 == p1, 0 otherwise
+IsEqual: !seq |2
+  Copy(p0, temp0)
+  Copy(p1, temp1)
+  SubtractFrom(temp0, temp1)
+  Add(temp0, temp1, temp2)
+  Set(temp2, p2)
+  Not(p2)
+
+# p0 p1 1 -> p0 p1+1 1 if p0 is not a multiple of p1
+#            p0 p1   0 if p0 is a multiple of p1
+IsNotMultipleOfAndIncrement: !seq |2
+  Zero(p2)
+  FixMod(p0, p1, temp0, p2)
+  Zero(temp0)
+  True(p2)
+  Copy(p2, temp1)
+  Move(temp1, p1)
+
+# p0 -> the next prime after p0
+NextPrime: !seq |2
+  One(temp0)
+  while(temp0, p0, temp0, IsPrimeAndIncrement)
+
+# p0 1 -> p0+1 1 if p0+1 is not prime
+#         p0+1 0 if p0+1 is prime
+IsPrimeAndIncrement: !seq |2
+  Move(p1, p0)
+  IsPrime(p0, p1)
+  Not(p1)
+
+
+# p0 -> "simplified" fraction version of p0
+SimplifyFraction: !seq |2
+  Copy(p0, temp0)
+  One(temp1)
+  Two(temp2)
+  Three(temp3)
+  while(temp1, p0, temp0, temp2, temp3, temp1, SimplifyAndIncrementPrimes)
+  Zero(temp0)
+  Zero(temp2)
+  Zero(temp3)
+
+# p0 p1 p2 p3 1 ->
+#  "simplified" fraction of p0 wrt primes p2, p3
+#  "simplified" and cleared fraction of p1 wrt primes p2, p3
+#  the next two primes after p2, p3
+#  0/1, depending on whether p1 == 1 (should we keep going?)
+SimplifyAndIncrementPrimes: !seq |2
+  Zero(p4)
+  FixMult(p2, p3, temp0)
+  FixMod(p1, temp0, temp1, temp2)
+  True(temp2)
+  if(temp2, p1, p2, p3, ClearOfAndIncrementPrimes)
+  Not(temp2)
+  if(temp2, temp1, p1, p0, temp0, CopyToAndDivideBy)
+  One(temp3)
+  IsGreater(p1, temp3, p4)
+  Zero(temp0)
+  Zero(temp1)
+  Zero(temp2)
+  Zero(temp3)
+
+# p0 p1 p2 ->
+#   p0 "cleared" of the primes p1, p2,
+#   the next primes after p1, p2
+ClearOfAndIncrementPrimes: !seq |2
+  ClearDivisor(p0, p1)
+  ClearDivisor(p0, p2)
+  IncrementPrimes(p1, p2)
+
+# p0 p1 -> the next primes after p0, p1
+IncrementPrimes: !seq |2
+  NextPrime(p1)
+  Replace(p1, p0)
+  NextPrime(p1)
+
+# p0 p1 p2 p3 -> 0 p0 p2/p3 0
+CopyToAndDivideBy: !seq |2
+  MoveReplace(p0, p1)
+  Mod(p2, p3, temp0, temp1)
+  MoveReplace(temp0, p2)
+
+# p0 p1 -> p0/p1^a, p1, where a is the highest power of p1 dividing p0
+ClearDivisor: !seq |2
+  One(temp0)
+  while(temp0, p0, p1, temp0, ClearSingleDivisor)
+
+# p0 p1 1 -> p0/p1 p1 1 if p1 divides p0
+#            p0 p1 0 otherwise
+ClearSingleDivisor: !seq |2
+  Zero(p2)
+  FixMod(p0, p1, temp0, p2)
+  True(p2)
+  Not(p2)
+  if(p2, temp0, p0, MoveReplace)
+  Zero(temp0)
+
+# p0 0 -> p0 0/1 depending on whether the "fraction" p0 represents an integer
+IsInteger: !seq |2
+  Copy(p0, temp0)
+  One(temp1)
+  Two(temp2)
+  Three(temp3)
+  while(temp1, p0, temp0, temp2, temp3, p1, temp1, IsIntegerAndIncrementPrimes)
+  Zero(temp0)
+  Zero(temp2)
+  Zero(temp3)
+
+# p0 p1 p2 p3 p4 p5 ->
+#  p0
+#  p1 cleared of the primes p2, p3
+#  the next primes after p2, p3
+#  0/1 depending on whether p0 is not or might be an integer
+#  0/1/ depending on whether p1 is 1 (i.e., we should stop dividing)
+IsIntegerAndIncrementPrimes: !seq |2
+  Zero(p4)
+  Zero(p5)
+  FixMod(p1, p3, temp0, p4)
+  True(p4)
+  ClearDivisor(p1, p2)
+  Zero(temp0)
+  One(temp0)
+  IsGreater(p1, temp0, temp1)
+  FixMult(p4, temp1, p5)
+  Zero(temp0)
+  Zero(temp1)
+  IncrementPrimes(p2, p3)
+
+
+# p0 p1 0 -> p0/p1^a p1 a, where p1^a is the highest power of p1 dividing p0
+IntegerLog: !seq |2
+  One(temp0)
+  while(temp0, p0, p1, p2, temp0, DivideByAndIncrement)
+
+# p0 p1 p2 1 -> p0/p1 p1 p2+1 1 if p1 divides p0
+#               p0 p1 p2 0 otherwise
+DivideByAndIncrement: !seq |2
+  Zero(p3)
+  FixMod(p0, p1, temp0, p3)
+  True(p3)
+  Not(p3)
+  if(p3, temp0, p0, MoveReplace)
+  Zero(temp0)
+  Copy(p3, p2)
+
+# p1 -> p0 (output), where p0 is an encoded program and p1 is the encoded input
+Interpret: !seq |2
+  One(temp0)
+  while(temp0, p0, p1, temp0, InterpretOnce)
+
+# p1 1 -> p0 (output) 0/1, depending on whether the program halted or not (0 == halt)
+InterpretOnce: !seq |2
+  Copy(p0, temp0)
+  One(temp1)
+  Two(temp2)
+  while(temp1, temp0, p1, temp2, p2, temp1, InterpretSingleFraction)
+  Zero(temp0)
+  Zero(temp2)
+
+# p1 p2 1 1 ->
+#  (program cut down by prime p2)
+#  (product with fraction if integer)
+#  (next prime)
+#  0/1: 0 if p0 == 1 (it was the last fraction/prime dividing it)
+#  0/1: 0 if the result is an integer
+InterpretSingleFraction: !seq |2
+  IntegerLog(p0, p2, temp0)
+  Copy(temp0, temp1)
+  True(temp1)
+  Replace(temp1, p3)
+  Replace(temp1, p4)
+  if(temp1, temp0, p1, p4, InterpretGivenFraction)
+  if(p4, p2, NextPrime)
+  Zero(temp0)
+  Zero(temp1)
+
+# p0 p1 1 -> p0 (p0*p1 if it's an integer) 0/1 (0 if it's an integer)
+InterpretGivenFraction: !seq |2
+  Zero(p2)
+  FixMult(p0, p1, temp0)
+  SimplifyFraction(temp0)
+  IsInteger(temp0, p2)
+  if(p2, temp0, p1, MoveReplace)
+  Not(p2)
+  Zero(temp0)
