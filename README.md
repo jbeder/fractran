@@ -3,9 +3,9 @@ fractran
 
 Fractran interpreter in Fractran
 
-This was originally a [Stack Overflow answer](http://stackoverflow.com/a/1773868/112) that was closed. I've just copied the code and documentation here, but haven't tested anything.
+This was originally a [Stack Overflow post](http://stackoverflow.com/a/1773868/112) to a code golf question that was closed. I've just copied the code and documentation here, but haven't tested anything.
 
-The interpreter is fractran.fr, and is 1779 fractions.
+The interpreter is [fractran.fr](https://github.com/jbeder/fractran/blob/master/interpreter.fr), and is 1779 fractions.
 
 Input is specified as follows:
 
@@ -40,9 +40,9 @@ so in the first example, it'll be
 How does it work?
 -----------------
 
-I wrote a meta-language that compiles down to Fractran. It allows for functions (simple Fractran and sequences of other functions), and a `while` loop and `if` statement (for convenience!). The code for that is in interpeter.frp).
+I wrote a meta-language that compiles down to Fractran. It allows for functions (simple Fractran and sequences of other functions), and a `while` loop and `if` statement (for convenience!). The code for that is in [interpeter.frp](https://github.com/jbeder/fractran/blob/master/interpreter.frp).
 
-If you want to compile that code down to Fractran yourself, you can use fracc. I used my C++ YAML parser [yaml-cpp](http://code.google.com/p/yaml-cpp/), so you'd have to download and link with that; but I used the 0.3.x branch, and haven't updated it to 0.5.x. Patches welcome. For both yaml-cpp and the "compiler", you'll need [CMake](http://www.cmake.org) for cross-platform makefile generating.
+If you want to compile that code down to Fractran yourself, you can use [fracc](https://github.com/jbeder/fractran/tree/master/fracc). I used my C++ YAML parser [yaml-cpp](http://code.google.com/p/yaml-cpp/), so you'd have to download and link with that; but I used the 0.3.x branch, and haven't updated it to 0.5.x. Patches welcome. For both yaml-cpp and the "compiler", you'll need [CMake](http://www.cmake.org) for cross-platform makefile generating.
 
 The usage of this program is:
 
@@ -67,7 +67,7 @@ I don't recommend actually trying to run the Fractran interpreter (alas). I test
 
 So how do I know it works? Well, of course I'm not 100% certain, but I'm pretty close. First of all, I tested many, many of its components, and in particular, I tested all of the elements of the meta-language (sequences of functions and `if` and `while` statements) very thoroughly.
 
-Also, the meta-language is easy to translate into your favorite language, and even easier to translate to C++, since all parameters of functions are passed by reference. If you're feeling lazy again, you can use interpreter-cpp.
+Also, the meta-language is easy to translate into your favorite language, and even easier to translate to C++, since all parameters of functions are passed by reference. If you're feeling lazy again, you can use [interpreter-cpp](https://github.com/jbeder/fractran/tree/master/interpreter-cpp).
 
 So you can compare the two interpreters, run the C++ version (it also takes input/output in pseudo-Fractran), check that that works, and then convince yourself that the meta-language works too.
 
