@@ -2,16 +2,17 @@
 
 #include <iosfwd>
 
-namespace YAML { class Node; }
+namespace YAML {
+class Node;
+}
 class SimpleFn;
 class Program;
 
-class Fn
-{
+class Fn {
  public:
   virtual ~Fn() {}
 
-  virtual SimpleFn *Compile(Program& program) const = 0;
+  virtual SimpleFn* Compile(Program& program) const = 0;
 };
 
-Fn *CreateFn(const YAML::Node& fn);
+Fn* CreateFn(const YAML::Node& fn);

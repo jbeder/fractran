@@ -10,6 +10,6 @@ struct Slot {
   unsigned index;
 };
 
-std::ostream& operator << (std::ostream& out, const Slot& slot);
+std::ostream& operator<<(std::ostream& out, const Slot& slot);
 
 const Slot ToSlot(const std::string& name);

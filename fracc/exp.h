@@ -4,16 +4,17 @@
 #include <iosfwd>
 #include <vector>
 
-class Exp
-{
+class Exp {
  public:
   Exp() {}
   Exp(std::istream& in);
 
   void GetMaxSizes(unsigned& params, unsigned& temps, unsigned& signals) const;
-  std::ostream& Write(std::ostream& out, unsigned params, unsigned temps, unsigned signals) const;
-  Exp *Translate(const std::vector<Slot>& params, unsigned tempStart, unsigned sigStart) const;
-  Exp *ShiftBy(unsigned paramShift, unsigned sigShift) const;
+  std::ostream& Write(std::ostream& out, unsigned params, unsigned temps,
+                      unsigned signals) const;
+  Exp* Translate(const std::vector<Slot>& params, unsigned tempStart,
+                 unsigned sigStart) const;
+  Exp* ShiftBy(unsigned paramShift, unsigned sigShift) const;
 
   bool UsesSignals() const { return !m_signal.empty(); }
 

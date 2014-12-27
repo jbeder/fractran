@@ -4,9 +4,8 @@
 #include <iostream>
 #include <fstream>
 
-int main(int argc, char **argv)
-{
-  if(argc != 2) {
+int main(int argc, char **argv) {
+  if (argc != 2) {
     std::cerr << "Usage: fracc inputfile\n";
     return 0;
   }
@@ -20,7 +19,7 @@ int main(int argc, char **argv)
   std::string name;
   std::cin >> name;
   SimpleFn *pFn = program.GetFn(name);
-  if(pFn)
+  if (pFn)
     pFn->Write(std::cout);
 
   return 0;

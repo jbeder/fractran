@@ -4,10 +4,9 @@
 
 class Exp;
 
-class WhileFn: public SimpleFn
-{
+class WhileFn : public SimpleFn {
  public:
-  WhileFn(const SimpleFn& bodyFn);
+  WhileFn(const SimpleFn &bodyFn);
 
  private:
   Exp *CreateGrabSignal();

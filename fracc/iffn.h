@@ -4,10 +4,9 @@
 
 class Exp;
 
-class IfFn: public SimpleFn
-{
+class IfFn : public SimpleFn {
  public:
-  IfFn(const SimpleFn& bodyFn);
+  IfFn(const SimpleFn &bodyFn);
 
  private:
   void AddIfExp(bool needsSignal);
