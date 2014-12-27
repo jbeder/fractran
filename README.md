@@ -15,7 +15,7 @@ First, we encode a fraction `m/n = p_0^a0... p_k^ak` by:
 -  Multiply by `p_2i^ai` if `ai > 0`
 -  Multiply by `p_2i+1^{-ai}` if `a_i < 0`
 
-This way, we encode any fraction as a positive integer. Now, given a progoram (sequence of encoded fractions F0, F1, ...), we encode that by
+This way, we encode any fraction as a positive integer. Now, given a program (sequence of encoded fractions F0, F1, ...), we encode that by
 
 p_0^F0 p1^F1 ...
 
