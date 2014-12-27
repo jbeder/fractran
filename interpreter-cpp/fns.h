@@ -29,14 +29,16 @@ void IsNotMultipleOfAndIncrement(Param p0, Param p1, Param p2);
 void NextPrime(Param p0);
 void IsPrimeAndIncrement(Param p0, Param p1);
 void SimplifyFraction(Param p0);
-void SimplifyAndIncrementPrimes(Param p0, Param p1, Param p2, Param p3, Param p4);
+void SimplifyAndIncrementPrimes(Param p0, Param p1, Param p2, Param p3,
+                                Param p4);
 void IncrementPrimes(Param p0, Param p1);
 void ClearDivisor(Param p0, Param p1);
 void ClearSingleDivisor(Param p0, Param p1, Param p2);
 void ClearOfAndIncrementPrimes(Param p0, Param p1, Param p2);
 void CopyToAndDivideBy(Param p0, Param p1, Param p2, Param p3);
 void IsInteger(Param p0, Param p1);
-void IsIntegerAndIncrementPrimes(Param p0, Param p1, Param p2, Param p3, Param p4, Param p5);
+void IsIntegerAndIncrementPrimes(Param p0, Param p1, Param p2, Param p3,
+                                 Param p4, Param p5);
 void IntegerLog(Param p0, Param p1, Param p2);
 void DivideByAndIncrement(Param p0, Param p1, Param p2, Param p3);
 void Interpret(Param p0, Param p1);
